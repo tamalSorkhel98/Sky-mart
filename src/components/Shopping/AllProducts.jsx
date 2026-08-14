@@ -1,23 +1,24 @@
-import { ShoppingCartIcon } from 'lucide-react';
-import React, { useContext } from 'react'
+import { ShoppingCartIcon,Check } from 'lucide-react';
+import React, { useContext, useState } from 'react'
 import { MyStore } from '../../Context/MyContext';
 
 const AllProducts = (props) => { 
   const {cartItem,setCartItem,addToCartOpen, setAddToCartOpen} = useContext(MyStore);   
-  const {id,image,category,price,productname,rating,totalRating}=props;
-
+  const {id,image,category,price,productname,rating,totalRating,total}=props;
+ 
    const  addToCartHandle=(idx)=>{ 
-   const result = (cartItem.find(e=>e.id==idx));
-   if(result){
-    result.total+=1;
+        const result = (cartItem.find(e=>e.id==idx));
+        if(result){
+            result.total+=1;
+            
+        }
+        else{
+            setCartItem([...cartItem, {...props, total:1}]);
+        }
+        
+            setAddToCartOpen(true)
    }
-   else{
-    setCartItem([...cartItem, {...props, total:1}])
-   }
-    setAddToCartOpen(true)
-
-    console.log(result);
-   }
+   const inCart = cartItem.some((item)=>item.id===id);
   return (
     <div className=' bg-white/5 border relative border-white/10 rounded-2xl overflow-hidden w-full'>
         <span className='absolute bg-black/80 px-3 py-1 rounded-2xl left-2 top-2 text-xs z-10'>
@@ -42,7 +43,12 @@ const AllProducts = (props) => {
             </span>
 
             <span className='text-xs'>
-            ⭐⭐⭐⭐
+            {/* ⭐⭐⭐⭐ */}
+            {
+                rating>4.7&&"⭐⭐⭐⭐⭐" ||
+                rating>4.3&&"⭐⭐⭐⭐"
+                
+            } <span>{rating}</span>
             <span className='ml-1 sm:ml-2 text-white/40'>
                 ({totalRating})
             </span>
@@ -57,7 +63,7 @@ const AllProducts = (props) => {
             </span>
 
             <button 
-                className='flex items-center bg-[#C8F400] text-black text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl whitespace-nowrap'
+                className={`${inCart ? 'bg-green-500' : 'bg-[#C8F400]'}  flex items-center  text-black text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl whitespace-nowrap`}
 
                 onClick={()=>{
                   
@@ -67,10 +73,24 @@ const AllProducts = (props) => {
                    
                 }}
             >
-                <span>Add</span>
-                <span>
-                    <ShoppingCartIcon size={16} />
-                </span>
+                {
+                    inCart?
+                   
+                    <>
+                        <span>Added</span>
+                        <span>
+                            <Check size={16} />
+                        </span>
+                    </> 
+                    :
+                    <>
+                        <span>Add</span>
+                        <span>
+                            <ShoppingCartIcon size={16} />
+                        </span>
+                    </>
+                }
+                
             </button>
         </div>
     </div>

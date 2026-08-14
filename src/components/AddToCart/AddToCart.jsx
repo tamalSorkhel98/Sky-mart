@@ -5,14 +5,13 @@ import CartItems from './CartItems';
 import { MoveRight } from 'lucide-react';
 
 const AddToCart = () => {
-    const {setAddToCartOpen,addToCartOpen,cartItem,setCartItem}=useContext(MyStore);  
+    const {setAddToCartOpen,addToCartOpen,cartItem,setCartItem,setCheckOut}=useContext(MyStore);  
      const totalPrice = cartItem.reduce((acc,val)=>{
         return acc+(val.price*val.total)
     },0)
     const totalItem = cartItem.reduce((acc,val)=>{
         return acc+(val.total)
-    },0)
-    console.log(totalPrice); 
+    },0) 
   return (
    <div className='bg-black fixed top-0 z-20 right-0 w-full h-screen  md:w-[50vw]  text-white flex flex-col'>
       <div className={`px-10 py-4 text-white flex justify-between items-center mb-5`}>
@@ -35,8 +34,19 @@ const AddToCart = () => {
       <hr />
       <div className='p-5 flex flex-col gap-7'>
         <p className='flex w-full justify-between'><span className='text-xl text-white/50'>Total</span> <span className='text-2xl font-bold'>{totalPrice}</span></p>
+{/* checkout btn */}
         <button 
-        className='flex justify-center gap-4 items-center bg-[#C8F400] text-black font-semibold text-xl w-full p-4 rounded-2xl'>
+          onClick={()=>{
+            if(totalItem===0){
+              return;
+            }
+            setAddToCartOpen(false);
+            setCheckOut(true);
+            setTimeout(() => {
+              setCheckOut(false);
+            }, 3000);
+          }}
+          className='flex justify-center gap-4 items-center bg-[#C8F400] text-black font-semibold text-xl w-full p-4 rounded-2xl'>
           <span>CheckOut</span>
           <span><MoveRight/></span>
         </button>

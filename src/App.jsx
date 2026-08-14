@@ -6,13 +6,14 @@ import Navbar from './Navbar';
 import ShopProducts from './components/Shopping/ShopProducts';
 import { MyStore } from './Context/MyContext';
 import AddToCart from './components/AddToCart/AddToCart';
+import { Check } from 'lucide-react';
 
 const App = () => {
-  const {addToCartOpen,setAddToCartOpen} = useContext(MyStore);
+  const {addToCartOpen,setAddToCartOpen,checkOut,currentPage, setCurrentPage} = useContext(MyStore);
   
   const [isLogin, setIsLogin] = useState(true);
   const [signin, setSignin] = useState(false);
-  const [currentPage, setCurrentPage] = useState('home');
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
  const products = [
@@ -460,7 +461,7 @@ const App = () => {
     price: 699
   }
 ];
-  const showPage=()=>{
+ const showPage=()=>{
       if(currentPage==='home'){
         if(addToCartOpen){
           return(
@@ -491,7 +492,9 @@ const App = () => {
       if(currentPage==='about'){
         
         
-        return 'I am about'
+        return <div className='text-black'>
+          'I am about'
+        </div>
       }
       if(currentPage==='logout'){
         return <SignIn/>
@@ -507,9 +510,19 @@ const App = () => {
           {
             showPage()
           }
+         <div>
+         
+           { checkOut&&
+              <p className=' flex gap-3 p-2 rounded-2xl fixed top-[90vh] right-10 bg-gray-950 text-white'>
+                <span className='w-7 h-7 rounded-full p-1 bg-[#C8F400] border flex justify-center items-center text-black'><Check/></span>Ordered placed</p>          
+           }
+         
+         </div>
           
           </div>
-        }    
+          
+        } 
+
     </div>
   )
 }

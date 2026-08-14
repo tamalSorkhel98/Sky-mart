@@ -4,7 +4,10 @@ import{ShoppingCart,LogOut,TextAlignJustify}from 'lucide-react'
 import { MyStore } from './Context/MyContext'
 
 const Navbar = ({setCurrentPage,currentPage,setIsMenuOpen,isMenuOpen}) => {
-  const {addToCartOpen, setAddToCartOpen} = useContext(MyStore); 
+  const {addToCartOpen, setAddToCartOpen,cartItem} = useContext(MyStore); 
+  const totalItems = cartItem.reduce((acc,val)=>{
+    return acc+val.total;
+  },0);
   return (
  <div className=' sticky z-20 bg-black text-white  text-[14px] top-0'>
      <div className='flex sticky z-20 bg-black text-white  items-center justify-between text-[14px] top-0 h-[10vh] left-0 px-6 md:px-8 lg:px-30  w-full'>
@@ -18,15 +21,19 @@ const Navbar = ({setCurrentPage,currentPage,setIsMenuOpen,isMenuOpen}) => {
         <span className='hidden md:flex bg-white/6 border-[.5px] tems-center gap-2 border-[#e5e7eb] px-2.5 py-1 rounded-md'><span className='bg-[#C8F400] text-black px-3 py-1 rounded'>U</span>User Name</span>
 
         <span 
-          className='border-[.5px] border-white/30 px-2.5 py-1    rounded-md'
+          className='relative border-[.5px] border-white/30 px-2.5 py-2 flex items-center    rounded-md'
           onClick={()=>{
             console.log('cart');
             
             setAddToCartOpen(true)
           }}
-        ><ShoppingCart/></span>
-        <span className='border-[.5px] border-white/30 px-2.5 py-1 rounded-md'><LogOut/></span>
-        <span className='cursor-pointer border-[.5px] border-white/30 px-2.5 py-1 md:hidden rounded-md'
+        ><span className='absolute top-0 right-0 bg-[#C8F400] p-1 h-4 w-4 rounded-full flex items-center justify-center text-black font-bold'>
+          {totalItems}
+        </span>
+        <ShoppingCart/>
+        </span>
+        <span className='border-[.5px] border-white/30 px-2.5 py-2 flex items-center rounded-md'><LogOut/></span>
+        <span className='cursor-pointer border-[.5px] border-white/30 px-2.5 py-2 flex items-center md:hidden rounded-md'
         onClick={()=>{
           setIsMenuOpen((prev)=>!prev)
         }}

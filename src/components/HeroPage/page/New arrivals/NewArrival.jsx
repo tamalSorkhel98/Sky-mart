@@ -1,12 +1,21 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Zap,MoveRight,ShoppingBag } from 'lucide-react'
+import { MyStore } from '../../../../Context/MyContext'
 const NewArrival = () => {
+    const{setCurrentPage}=useContext(MyStore);
   return (
     <div className='p-4'>
             <div className='text-white bg-white/7 p-4 rounded-2xl'>
                 <div className='flex mb-4 justify-between'>
                     <span className='flex gap-2'><span className=''><Zap className='text-[#C8F400] fill-[#C8F400]'/></span>New Arrival</span>
-                    <span className='text-sm flex gap-2 text-[#C8F400]'>See All <span><MoveRight/></span></span>
+                    <span 
+                        onClick={()=>{
+                            setCurrentPage('shop');
+                        }}
+                    className='cursor-pointer text-sm flex gap-2 text-[#C8F400]'>
+                        See All 
+                        <span><MoveRight/></span>
+                        </span>
                 </div>
                 <div className="container flex flex-col gap-4    rounded-xl">
                         <div className='flex justify-between p-3 rounded-xl border border-white/15'>

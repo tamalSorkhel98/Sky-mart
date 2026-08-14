@@ -1,10 +1,11 @@
 import { Filter } from 'lucide-react'
-import React from 'react'
+import React, { useContext } from 'react'
 import FilterBox from './FilterBox'
 import AllProducts from './AllProducts'
+import { MyStore } from '../../Context/MyContext'
 
 const ShopProducts = ({products}) => {
-  
+  const{filterProducts}=useContext(MyStore)
   
   return (
     <div className=' text-white flex flex-col gap-5 px-6 py-5 mt-3'>
@@ -13,10 +14,15 @@ const ShopProducts = ({products}) => {
       <p className='text-white/40'><span>50</span> products found</p>
       </div>
       <div className='md:flex justify-center md:mb-5'>
-        <FilterBox/>
+        <FilterBox products={products}/>
       </div>
       <div className='grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4'>
         {
+          filterProducts?
+            filterProducts.map((p)=>{        
+            return (<AllProducts key={p.id} id={p.id} image={p.img} category={p.category}  price={p.price} productname={p.productname} rating={p.rating} totalRating={p.totalrating} />)
+          })
+          :
           products.map((p)=>{        
             return (<AllProducts key={p.id} id={p.id} image={p.img} category={p.category}  price={p.price} productname={p.productname} rating={p.rating} totalRating={p.totalrating} />)
           })
