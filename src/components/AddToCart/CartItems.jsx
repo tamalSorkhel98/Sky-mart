@@ -1,8 +1,8 @@
-import React, { useContext } from 'react'
+import React, { use, useContext } from 'react'
 import{Minus,Plus, Trash}from 'lucide-react'
 import { MyStore } from '../../Context/MyContext'
 const CartItems = () => {
-    const {cartItem,setCartItem,usersData,currentUser}=useContext(MyStore)
+    const {cartItem,setCartItem,usersData,currentUser,setUsersData}=useContext(MyStore)
    const singlePrice = cartItem.filter((i)=>{
     
    })
@@ -122,11 +122,26 @@ const CartItems = () => {
                         {/* Delete */}
                         <button
                         onClick={()=>{
-                            setCartItem(
-                                cartItem.filter((c)=>{
-                                    return c.id!==item.id
-                                })
-                            )
+
+                            const cur_user = JSON.parse(localStorage.getItem('Current-User'));
+                            const updatedCart=cur_user.Cart_Items.filter((c)=>{
+                                return c.id!==item.id
+                            })
+                            const updatedData = usersData.map((user)=>{
+                                if(user.email===cur_user.email&&user.new_password===cur_user.new_password){
+                                    return {
+                                        ...user,Cart_Items:updatedCart
+                                    }
+                                }
+                                return user;
+                            })
+                            console.log(updatedCart);
+                            
+                            setCartItem(updatedCart)
+                            setUsersData(updatedData)
+                           
+                            localStorage.setItem('Users-Data',JSON.stringify(updatedData));
+                          
                         }}
                         className="p-1">
                         <Trash className="text-red-700" size={18} />

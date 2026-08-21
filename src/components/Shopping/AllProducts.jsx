@@ -6,40 +6,66 @@ const AllProducts = (props) => {
   const {cartItem,setCartItem,addToCartOpen, setAddToCartOpen,usersData,setUsersData,currentUser,setCurrentUser} = useContext(MyStore);   
   const {id,image,category,price,productname,rating,totalRating,total}=props;
  
-  const addToCartHandle = (idx) => {
-    let carts = [...cartItem];
+ const addToCartHandle = (idx) => {
+  let carts = [...cartItem];
 
-    const result = cartItem.find(e => e.id == idx);
+  const result = cartItem.find((e) => e.id == idx);
 
-    const user = usersData.find(
-        d =>
-            d.email === currentUser.email &&
-            d.new_password === currentUser.new_password
-    );
+  if (result) {
+    result.total += 1;
+    carts = [...cartItem];
+  } else {
+    carts = [...cartItem, { ...props, total: 1 }];
+  }
 
-    if (result) {
-        result.total += 1;
-        carts = [...cartItem];   // add this
-    } else {
-        carts = [...cartItem, { ...props, total: 1 }];
-        setCartItem(carts);
+  const user = usersData.find(
+    (d) =>
+      d.email === currentUser.email &&
+      d.new_password === currentUser.new_password
+  );
+
+  if (!user) {
+    console.log("User not found");
+    return;
+  }
+
+  const updatedUsers = usersData.map((data) => {
+    if (
+      data.email === currentUser.email &&
+      data.new_password === currentUser.new_password
+    ) {
+      return {
+        ...data,
+        Cart_Items: carts
+      };
     }
 
-    user.Cart_Items = [...carts];
+    return data;
+  });
 
-    localStorage.setItem(
-        'Current-User',
-        JSON.stringify(user)
-    );
+  setCartItem(carts);
 
-    setCurrentUser(user);
+  setUsersData(updatedUsers);
 
-    localStorage.setItem(
-        'Users-Data',
-        JSON.stringify(usersData)
-    );
+  localStorage.setItem(
+    "Current-User",
+    JSON.stringify({
+      ...user,
+      Cart_Items: carts
+    })
+  );
 
-    setAddToCartOpen(true);
+  setCurrentUser({
+    ...user,
+    Cart_Items: carts
+  });
+
+  localStorage.setItem(
+    "Users-Data",
+    JSON.stringify(updatedUsers)
+  );
+
+  setAddToCartOpen(true);
 };
    const inCart = cartItem.some((item)=>item.id===id);
   return (
