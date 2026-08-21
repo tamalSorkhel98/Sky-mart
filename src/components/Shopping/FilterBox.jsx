@@ -13,7 +13,7 @@ const FilterBox = ({products}) => {
         return (filter.categories==='all'||
         p.category==filter.categories)
             &&
-        p.productname.toLowerCase().includes(filter.search.trim())    
+        p.productname.toLowerCase().includes(filter.search.trim().toLowerCase())    
        })
        if(filter.feature==='low_high') {
         filterResult.sort((a,b)=>a.price-b.price)
