@@ -4,12 +4,8 @@ import { MyStore } from '../../Context/MyContext';
 const FilterBox = ({products}) => {
   
   
-  const {filterProducts, setFilterProducts}=useContext(MyStore)
-  const [filter, setFilter] = useState({
-    search:'',
-    categories:'all',
-    feature:'featured'
-  });
+  const {filterProducts, setFilterProducts,filter, setFilter}=useContext(MyStore)
+  
   
   const filterHandle=()=>{
     

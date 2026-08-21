@@ -3,21 +3,44 @@ import React, { useContext, useState } from 'react'
 import { MyStore } from '../../Context/MyContext';
 
 const AllProducts = (props) => { 
-  const {cartItem,setCartItem,addToCartOpen, setAddToCartOpen} = useContext(MyStore);   
+  const {cartItem,setCartItem,addToCartOpen, setAddToCartOpen,usersData,setUsersData,currentUser,setCurrentUser} = useContext(MyStore);   
   const {id,image,category,price,productname,rating,totalRating,total}=props;
  
-   const  addToCartHandle=(idx)=>{ 
-        const result = (cartItem.find(e=>e.id==idx));
-        if(result){
-            result.total+=1;
-            
-        }
-        else{
-            setCartItem([...cartItem, {...props, total:1}]);
-        }
-        
-            setAddToCartOpen(true)
-   }
+  const addToCartHandle = (idx) => {
+    let carts = [...cartItem];
+
+    const result = cartItem.find(e => e.id == idx);
+
+    const user = usersData.find(
+        d =>
+            d.email === currentUser.email &&
+            d.new_password === currentUser.new_password
+    );
+
+    if (result) {
+        result.total += 1;
+        carts = [...cartItem];   // add this
+    } else {
+        carts = [...cartItem, { ...props, total: 1 }];
+        setCartItem(carts);
+    }
+
+    user.Cart_Items = [...carts];
+
+    localStorage.setItem(
+        'Current-User',
+        JSON.stringify(user)
+    );
+
+    setCurrentUser(user);
+
+    localStorage.setItem(
+        'Users-Data',
+        JSON.stringify(usersData)
+    );
+
+    setAddToCartOpen(true);
+};
    const inCart = cartItem.some((item)=>item.id===id);
   return (
     <div className=' bg-white/5 border relative border-white/10 rounded-2xl overflow-hidden w-full'>
@@ -46,7 +69,8 @@ const AllProducts = (props) => {
             {/* ⭐⭐⭐⭐ */}
             {
                 rating>4.7&&"⭐⭐⭐⭐⭐" ||
-                rating>4.3&&"⭐⭐⭐⭐"
+                rating>4.3&&"⭐⭐⭐⭐"||
+                rating<=4.3&&"⭐⭐⭐"
                 
             } <span>{rating}</span>
             <span className='ml-1 sm:ml-2 text-white/40'>

@@ -1,8 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Banner from '../Logo/Banner'
 import{Mail,Lock,User,Eye,MoveRight}from 'lucide-react'
 import InputComponent from './InputComponent'
+import { useForm } from 'react-hook-form'
+import { MyStore } from '../../Context/MyContext'
 const CreateAccountForm = ({setIsLogin}) => {
+    const{usersData,setUsersData}=useContext(MyStore)
+  const{register,handleSubmit,formState:{errors}}=useForm()
+ const onSubmit=(data)=>{
+    const users = [...usersData,data];
+    setUsersData([...usersData,data]);
+    localStorage.setItem('Users-Data',JSON.stringify(users));
+    setIsLogin(true);
+ }
   return (
     <div className="min-h-screen flex flex-col gap-10 items-center justify-center bg-black px-5">
         <Banner/>
@@ -17,14 +27,20 @@ const CreateAccountForm = ({setIsLogin}) => {
             </div>
 
             {/* Form */}
-            <form className="flex flex-col gap-5 relative">              
+            <form 
+           onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-5 relative">              
                <InputComponent
+                    {...register('name')}
                     icon={User} type='text' placeholder='Enter Your Name'/>
                 <InputComponent 
+                     {...register('email')}
                     icon={Mail} type='email' placeholder='Email Address'/>
                 <InputComponent 
+                     {...register('new_password')}
                     icon={Lock} type='password'  placeholder='New Password'extra={Eye}/>
                 <InputComponent 
+                     {...register('reEnterNew_password')}
                     icon={Lock} type='password'  placeholder='New Password (Minimum 6 character)'extra={Eye}/>
 
                 <button

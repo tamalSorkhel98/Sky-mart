@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import{Minus,Plus, Trash}from 'lucide-react'
 import { MyStore } from '../../Context/MyContext'
 const CartItems = () => {
-    const {cartItem,setCartItem}=useContext(MyStore)
+    const {cartItem,setCartItem,usersData,currentUser}=useContext(MyStore)
    const singlePrice = cartItem.filter((i)=>{
     
    })
@@ -49,23 +49,43 @@ const CartItems = () => {
                         
                         {/* Quantity */}
                         <div className="flex items-center gap-2 sm:gap-3">
-                        <button 
-                        onClick={()=>{
-                            item.total!==1?
-                            setCartItem(
-                                cartItem.map((c)=>{
-                                   return c.id===item.id ?
-                                    {...c,total:item.total-=1}:c
-                                })
-                            ):setCartItem(
-                                cartItem.filter((c)=>{
-                                    return c.id!==item.id
-                                })
-                                
-                            )
-                        }}
-                        className="p-1 sm:p-1.5 border rounded-xl border-white/40">
-                            <Minus size={16} />
+                       <button
+                            onClick={() => {
+        let updatedCart;
+
+        if (item.total !== 1) {
+            updatedCart = cartItem.map((c) => {
+                return c.id === item.id
+                    ? { ...c, total: c.total - 1 }
+                    : c;
+            });
+        } else {
+            updatedCart = cartItem.filter((c) => {
+                return c.id !== item.id;
+            });
+        }
+
+        setCartItem(updatedCart);
+
+        const user = usersData.find(
+            (d) =>
+                d.email === currentUser.email &&
+                d.new_password === currentUser.new_password
+        );
+
+        user.Cart_Items = updatedCart;
+
+        localStorage.setItem(
+            'Users-Data',
+            JSON.stringify(usersData)
+        );
+
+        console.log(user);
+        console.log(updatedCart);
+    }}
+    className="p-1 sm:p-1.5 border rounded-xl border-white/40"
+                        >
+                                <Minus size={16} />
                         </button>
 
                         <span className="text-sm sm:text-base">
@@ -73,16 +93,28 @@ const CartItems = () => {
                         </span>
 
                         <button 
-                            onClick={()=>{
-                                setCartItem(
-                                    cartItem.map((c)=>{
-                                       return c.id===item.id?
-                                       {...c,total:item.total+=1} :c
-                                    })
-                                )
-                            }}
-                        
-                        className="p-1 sm:p-1.5 border rounded-xl border-white/40">
+                           onClick={() => {
+        let updatedCart;
+
+            updatedCart = cartItem.map((c) => {
+                return c.id === item.id
+                    ? { ...c, total: c.total + 1 }
+                    : c;
+            });
+        setCartItem(updatedCart);
+        const user = usersData.find(
+            (d) =>
+                d.email === currentUser.email &&
+                d.new_password === currentUser.new_password
+        );
+        user.Cart_Items = updatedCart;
+        localStorage.setItem(
+            'Users-Data',
+            JSON.stringify(usersData)
+        );    
+    }}
+    className="p-1 sm:p-1.5 border rounded-xl border-white/40"
+                        >
                             <Plus size={16} />
                         </button>
                         </div>

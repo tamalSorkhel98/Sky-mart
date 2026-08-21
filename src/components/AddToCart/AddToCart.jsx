@@ -5,7 +5,7 @@ import CartItems from './CartItems';
 import { MoveRight } from 'lucide-react';
 
 const AddToCart = () => {
-    const {setAddToCartOpen,addToCartOpen,cartItem,setCartItem,setCheckOut}=useContext(MyStore);  
+    const {setAddToCartOpen,addToCartOpen,cartItem,setCartItem,setCheckOut,usersData,setUsersData}=useContext(MyStore);  
      const totalPrice = cartItem.reduce((acc,val)=>{
         return acc+(val.price*val.total)
     },0)
@@ -42,6 +42,20 @@ const AddToCart = () => {
             }
             setAddToCartOpen(false);
             setCheckOut(true);
+            setCartItem([]);
+            const Cur_user = JSON.parse(localStorage.getItem('Current-User'));
+            const user = usersData.map((data)=>{
+                if(data.email===Cur_user.email && data.new_password===Cur_user.new_password){
+                  return {...data,Cart_Items:[]};
+                }
+                return data;
+            })
+          
+            Cur_user.Cart_Items=[];
+            localStorage.setItem('Current-User',JSON.stringify(Cur_user))
+            localStorage.setItem('Users-Data',JSON.stringify(user));
+            setUsersData(user)
+            
             setTimeout(() => {
               setCheckOut(false);
             }, 3000);

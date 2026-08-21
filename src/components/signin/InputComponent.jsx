@@ -1,6 +1,8 @@
 import React from 'react'
+import { useForm } from 'react-hook-form'
 
-const InputComponent = ({ icon: Icon, type, placeholder,extra: Eye }) => {
+const InputComponent = ({ icon: Icon, type, placeholder,extra: Eye,...register }) => {
+
   
   return (
     <div className='relative'>
@@ -17,6 +19,7 @@ const InputComponent = ({ icon: Icon, type, placeholder,extra: Eye }) => {
         ) : null
         }
       <input
+        {...register}
         type={type}
         placeholder={placeholder}
         className="w-full rounded-xl border p-3 pl-10 pr-10
